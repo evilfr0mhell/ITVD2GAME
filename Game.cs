@@ -71,6 +71,7 @@ public class Game
             {
                 Console.WriteLine($"Слот {i}: Пусто");
             }
+
         }
     }
 }
