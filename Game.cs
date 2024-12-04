@@ -2,7 +2,7 @@
 
 namespace game
 {
-    internal class Game
+    public class Game
     {
     }
 }
