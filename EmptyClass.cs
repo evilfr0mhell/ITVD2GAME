@@ -1,78 +1,113 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
 
-public class Sword
+class Program
 {
-    public Point Start { get; set; }
-    public Point End { get; set; }
+    static int health = 100;
+    static List<string> inventory = new List<string> { "Меч", "Щит", "Зелье" };
 
-    public Sword(Point start, Point end)
+    static void Main(string[] args)
     {
-        Start = start;
-        End = end;
-    }
-
-    public void Draw(Graphics g)
-    {
-        using (Pen pen = new Pen(Color.Gray, 5))
+        while (true)
         {
-            g.DrawLine(pen, Start, End); // Рисуем лезвие меча
-            g.DrawEllipse(pen, Start.X - 5, Start.Y - 5, 10, 10); // Рисуем ручку
+            ShowMainMenu();
         }
     }
-}
 
-public class Shield
-{
-    public Rectangle Rect { get; set; }
-
-    public Shield(Rectangle rect)
+    static void ShowMainMenu()
     {
-        Rect = rect;
-    }
-
-    public void Draw(Graphics g)
-    {
-        using (Brush brush = new SolidBrush(Color.Blue))
+        Console.Clear();
+        Console.WriteLine($"Здоровье: {health}");
+        Console.WriteLine("Инвентарь:");
+        for (int i = 0; i < inventory.Count; i++)
         {
-            g.FillRectangle(brush, Rect); // Рисуем щит
-            g.DrawRectangle(Pens.Black, Rect); // Рисуем обводку щита
+            Console.WriteLine($"{i + 1}. {inventory[i]}");
+        }
+        Console.WriteLine("1. Первая дверь");
+        Console.WriteLine("2. Вторая дверь");
+        Console.WriteLine("0. Выход");
+        Console.Write("Выберите действие: ");
+
+        string choice = Console.ReadLine();
+        switch (choice)
+        {
+            case "1":
+                ChooseFirstDoor();
+                break;
+            case "2":
+                ChooseSecondDoor();
+                break;
+            case "0":
+                Environment.Exit(0);
+                break;
+            default:
+                Console.WriteLine("Неверный выбор, попробуйте еще раз.");
+                Console.ReadKey();
+                break;
         }
     }
-}
 
-public class GameForm : Form
-{
-    private Sword sword;
-    private Shield shield;
-
-    public GameForm()
+    static void ChooseFirstDoor()
     {
-        this.Text = "Sword and Shield";
-        this.Size = new Size(800, 600);
-
-        // Создаем меч и щит
-        sword = new Sword(new Point(400, 50), new Point(400, 300));
-        shield = new Shield(new Rectangle(350, 300, 100, 150));
-
-        this.Paint += new PaintEventHandler(this.OnPaint);
+        Console.Clear();
+        Console.WriteLine("Вы выбрали первую дверь.");
+        InteractWithInventory();
     }
 
-    private void OnPaint(object sender, PaintEventArgs e)
+    static void ChooseSecondDoor()
     {
-        Graphics g = e.Graphics;
-
-        // Рисуем меч и щит
-        sword.Draw(g);
-        shield.Draw(g);
+        Console.Clear();
+        Console.WriteLine("Вы выбрали вторую дверь.");
+        InteractWithInventory();
     }
 
-    [STAThread]
-    public static void Main()
+    static void InteractWithInventory()
     {
-        Application.EnableVisualStyles();
-        Application.Run(new GameForm());
+        Console.WriteLine("Выберите предмет из инвентаря (или 0 для выхода):");
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {inventory[i]}");
+        }
+        Console.Write("Ваш выбор: ");
+
+        string itemChoice = Console.ReadLine();
+        if (itemChoice == "0")
+        {
+            return; // Вернуться в главное меню
+        }
+
+        int itemIndex;
+        if (int.TryParse(itemChoice, out itemIndex) && itemIndex > 0 && itemIndex <= inventory.Count)
+        {
+            ConfirmAction(inventory[itemIndex - 1]);
+        }
+        else
+        {
+            Console.WriteLine("Неверный выбор, попробуйте снова.");
+            Console.ReadKey();
+        }
+    }
+
+    static void ConfirmAction(string item)
+    {
+        Console.Clear();
+        Console.WriteLine($"Вы действительно хотите использовать {item}? (1. Да, 2. Нет)");
+        string confirmation = Console.ReadLine();
+
+        if (confirmation == "1")
+        {
+            Console.WriteLine($"Вы использовали {item}.");
+            // Добавьте логику для использования предмета
+            // Например, если это зелье, восстановление HP и т.д.
+        }
+        else if (confirmation == "2")
+        {
+            Console.WriteLine("Действие отменено.");
+        }
+        else
+        {
+            Console.WriteLine("Неверный выбор, возвращаемся в меню.");
+        }
+        Console.ReadKey(); // Ждем нажатия клавиши
     }
 }
