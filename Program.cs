@@ -5,6 +5,8 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Добро пожаловать в игру \"Выбери правильную дверь!\"\nДля начала игры нажмите любую клавишу");
+        Console.ReadKey();
         // Выбор игрока
         int playerChoice;
         do
